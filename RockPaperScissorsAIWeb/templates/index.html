@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rock Paper Scissors AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Rock Paper Scissors AI Game</h1>
+
+    <form method="post">
+        <button type="submit" name="move" value="rock">Rock</button>
+        <button type="submit" name="move" value="paper">Paper</button>
+        <button type="submit" name="move" value="scissors">Scissors</button>
+    </form>
+
+    {% if computer_move %}
+        <h2>Computer chose: {{ computer_move }}</h2>
+        <h2>Result: {{ result }}</h2>
+    {% endif %}
+
+    <div class="scoreboard">
+        <h2>Scoreboard</h2>
+        <p>Wins: {{ score['Win'] }}</p>
+        <p>Losses: {{ score['Lose'] }}</p>
+        <p>Ties: {{ score['Tie'] }}</p>
+    </div>
+
+    <h2>Your Move History</h2>
+    <canvas id="moveChart" width="400" height="200"></canvas>
+
+    <script>
+        const ctx = document.getElementById('moveChart').getContext('2d');
+        const moveChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Rock', 'Paper', 'Scissors'],
+                datasets: [{
+                    label: 'Number of Times Chosen',
+                    data: [
+                        {{ player_history['rock'] if player_history else 0 }},
+                        {{ player_history['paper'] if player_history else 0 }},
+                        {{ player_history['scissors'] if player_history else 0 }}
+                    ],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
